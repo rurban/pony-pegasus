@@ -74,7 +74,7 @@ class ExecutorTest is UnitTest
     
     true
   
-  fun test_match(h: TestHelper, g: Pattern, a: Array[(Bool, String, U64, U64)]) =>
+  fun test_match(h: TestHelper, g: Pattern, a: Array[(Bool, String, USize, USize)]) =>
     let parse = Executor
     for data in a.values() do
       (let success, let subject, let start, let final) = data
@@ -83,21 +83,21 @@ class ExecutorTest is UnitTest
       parse(g, subject)
       
       h.expect_eq[String](parse.subject, subject, desc+"subject")
-      h.expect_eq[U64](parse.start_index, start, desc+"start_index")
+      h.expect_eq[USize](parse.start_index, start, desc+"start_index")
       
       try
         if success then
           h.expect_true(parse.error_index is None, desc+"error_index")
-          h.expect_eq[U64](parse.end_index as U64, final, desc+"end_index")
+          h.expect_eq[USize](parse.end_index as USize, final, desc+"end_index")
         else
           h.expect_true(parse.end_index is None, desc+"end_index")
-          h.expect_eq[U64](parse.error_index as U64, final, desc+"error_index")
+          h.expect_eq[USize](parse.error_index as USize, final, desc+"error_index")
         end
       else
         h.expect_true(false, if success then
-          desc+"expected end_index to be a U64"
+          desc+"expected end_index to be a USize"
         else
-          desc+"expected error_index to be a U64"
+          desc+"expected error_index to be a USize"
         end)
       end
     end

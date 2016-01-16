@@ -2,10 +2,10 @@
 use ".."
 
 class Executor
-  var index:       U64          = 0
-  var start_index: U64          = 0
-  var end_index:   (U64 | None) = 0
-  var error_index: (U64 | None) = 0
+  var index:       USize          = 0
+  var start_index: USize          = 0
+  var end_index:   (USize | None) = 0
+  var error_index: (USize | None) = 0
   var subject:     String       = ""
   
   fun ref apply(grammar: Pattern, subject': String): Executor =>
@@ -36,11 +36,11 @@ class Executor
     | let p: PatternCountOrMore       => _execute_count_or_more(p)
     end
   
-  fun _save(): U64 =>
+  fun _save(): USize =>
     index
   
-  fun ref _restore(saved: U64, lookahead: Bool = false) =>
-    try if not lookahead and (index > (error_index as U64)) then
+  fun ref _restore(saved: USize, lookahead: Bool = false) =>
+    try if not lookahead and (index > (error_index as USize)) then
       error_index = index
     end end
     index = saved
@@ -58,14 +58,14 @@ class Executor
     end
   
   fun ref _execute_string(p: PatternString)? =>
-    if subject.compare_sub(p.inner, p.inner.size(), index.i64()) is Equal then
+    if subject.compare_sub(p.inner, p.inner.size(), index.isize()) is Equal then
       index = index + p.inner.size()
     else
       error
     end
   
   fun ref _execute_character_set(p: PatternCharacterSet)? =>
-    try p.inner.find(subject.substring(index.i64(), index.i64()))
+    try p.inner.find(subject.substring(index.isize(), index.isize()))
       index = index + 1
     else
       error
